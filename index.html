@@ -365,8 +365,8 @@
                     <td class="py-1 px-1.5 border-r text-right whitespace-nowrap">¥${item.amount.toLocaleString()}</td>
                     <td class="py-1 px-1.5 border-r text-center whitespace-nowrap">${ratioText}</td>
                     <td class="py-1 px-1.5 border-r text-right whitespace-nowrap font-semibold">¥${Math.round(requestAmount).toLocaleString()}</td>
-                    <td class="py-1 px-1.5 border-r text-gray-500 w-full text-[10px]">${item.memo || ''}</td>
-                    <td class="py-1 px-1.5 text-center whitespace-nowrap w-1"><button type="button" onclick="editItem('${item.id}')" class="bg-gray-100 hover:bg-gray-200 text-gray-700 px-1.5 py-0.5 rounded text-[10px]">編集</button></td>
+                    <td class="py-1 px-1.5 border-r text-gray-500 text-[10px] max-w-[120px] truncate" title="${item.memo || ''}">${item.memo || ''}</td>
+                    <td class="py-1 px-1.5 text-center whitespace-nowrap"><button type="button" onclick="editItem('${item.id}')" class="bg-gray-100 hover:bg-gray-200 text-gray-700 px-1.5 py-0.5 rounded text-[10px]" title="編集">✏️</button></td>
                 `;
 
                 if (item.payer === 'ちーた') {
