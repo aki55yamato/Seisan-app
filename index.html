@@ -312,6 +312,13 @@
             chitaTbody.innerHTML = '';
             akitaTbody.innerHTML = '';
 
+            // 日付の昇順（古い順）に並べ替え
+            items.sort((a, b) => {
+                if (!a.date) return 1;
+                if (!b.date) return -1;
+                return a.date.localeCompare(b.date);
+            });
+
             let chitaCredit = 0;
             let akitaCredit = 0;
             let chitaCount = 0;
@@ -362,6 +369,7 @@
                 resultText.innerHTML = `現在、精算の差額はありません`;
             }
         }
+
     </script>
 </body>
 </html>
