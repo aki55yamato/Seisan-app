@@ -93,13 +93,13 @@
                         <table class="w-full text-left border-collapse" style="font-size: 11px;">
                             <thead>
                                 <tr class="bg-gray-50 border-b text-gray-600">
-                                    <th class="p-2 border-r whitespace-nowrap">日付</th>
-                                    <th class="p-2 border-r whitespace-nowrap">項目</th>
-                                    <th class="p-2 border-r text-right whitespace-nowrap">金額</th>
-                                    <th class="p-2 border-r text-center whitespace-nowrap">割合</th>
-                                    <th class="p-2 border-r text-right whitespace-nowrap">請求額</th>
-                                    <th class="p-2 border-r w-full">メモ</th>
-                                    <th class="p-2 text-center whitespace-nowrap w-1">操作</th>
+                                    <th class="py-1 px-1.5 border-r whitespace-nowrap">日付</th>
+                                    <th class="py-1 px-1.5 border-r whitespace-nowrap">項目</th>
+                                    <th class="py-1 px-1.5 border-r text-right whitespace-nowrap">金額</th>
+                                    <th class="py-1 px-1.5 border-r text-center whitespace-nowrap">割合</th>
+                                    <th class="py-1 px-1.5 border-r text-right whitespace-nowrap">請求額</th>
+                                    <th class="py-1 px-1.5 border-r w-full">メモ</th>
+                                    <th class="py-1 px-1.5 text-center whitespace-nowrap w-1">操作</th>
                                 </tr>
                             </thead>
                             <tbody id="chita-tbody"></tbody>
@@ -119,13 +119,13 @@
                         <table class="w-full text-left border-collapse" style="font-size: 11px;">
                             <thead>
                                 <tr class="bg-gray-50 border-b text-gray-600">
-                                    <th class="p-2 border-r whitespace-nowrap">日付</th>
-                                    <th class="p-2 border-r whitespace-nowrap">項目</th>
-                                    <th class="p-2 border-r text-right whitespace-nowrap">金額</th>
-                                    <th class="p-2 border-r text-center whitespace-nowrap">割合</th>
-                                    <th class="p-2 border-r text-right whitespace-nowrap">請求額</th>
-                                    <th class="p-2 border-r w-full">メモ</th>
-                                    <th class="p-2 text-center whitespace-nowrap w-1">操作</th>
+                                    <th class="py-1 px-1.5 border-r whitespace-nowrap">日付</th>
+                                    <th class="py-1 px-1.5 border-r whitespace-nowrap">項目</th>
+                                    <th class="py-1 px-1.5 border-r text-right whitespace-nowrap">金額</th>
+                                    <th class="py-1 px-1.5 border-r text-center whitespace-nowrap">割合</th>
+                                    <th class="py-1 px-1.5 border-r text-right whitespace-nowrap">請求額</th>
+                                    <th class="py-1 px-1.5 border-r w-full">メモ</th>
+                                    <th class="py-1 px-1.5 text-center whitespace-nowrap w-1">操作</th>
                                 </tr>
                             </thead>
                             <tbody id="akita-tbody"></tbody>
@@ -152,7 +152,7 @@
     </nav>
 
     <script>
-        // ★ご自身のGASのウェブアプリURLを設定してください
+        // 指定されたGASのURLを設定
         const GAS_URL = "https://script.google.com/macros/s/AKfycbyor_lx9N-JZJuXknKI1DLCboIOK39f8WlX6R8s47e4n2jkf9vzMbauCDqYAoRUig/exec"; 
         let items = [];
 
@@ -271,14 +271,9 @@
         }
 
         function saveItem() {
-            if (GAS_URL.includes("YOUR_WEB_APP_URL")) {
-                alert("GASのURLを設定してください");
-                return;
-            }
-
             const editId = document.getElementById('edit-id').value;
             const date = document.getElementById('date').value;
-            const title = document.getElementById('title').value;
+            const title = document.getElementById('title'].value;
             const payer = document.getElementById('payer').value;
             const amount = parseFloat(document.getElementById('amount').value);
             const ratio = parseFloat(document.getElementById('ratio').value);
@@ -372,16 +367,26 @@
                 let ratioText = (item.ratio * 100) + '%';
                 if(item.ratio === 0.33) ratioText = '約33%';
 
+                // ① 日付から年号を削除して「MM/DD」（例: 10/03）の形式に変換
+                let shortDate = item.date;
+                if (item.date && item.date.includes('-')) {
+                    const parts = item.date.split('-');
+                    if (parts.length === 3) {
+                        shortDate = `${parts[1]}/${parts[2]}`;
+                    }
+                }
+
                 const tr = document.createElement('tr');
                 tr.className = "border-b hover:bg-gray-50";
+                // ②パディングを狭く(py-1 px-1.5)にし、③メモ欄の文字サイズを小さく(text-[10px])して折り返しを防止
                 tr.innerHTML = `
-                    <td class="p-2 border-r whitespace-nowrap">${item.date}</td>
-                    <td class="p-2 border-r whitespace-nowrap font-medium">${item.title}</td>
-                    <td class="p-2 border-r text-right whitespace-nowrap">¥${item.amount.toLocaleString()}</td>
-                    <td class="p-2 border-r text-center whitespace-nowrap">${ratioText}</td>
-                    <td class="p-2 border-r text-right whitespace-nowrap font-semibold">¥${Math.round(requestAmount).toLocaleString()}</td>
-                    <td class="p-2 border-r text-gray-500 w-full">${item.memo || ''}</td>
-                    <td class="p-2 text-center whitespace-nowrap w-1"><button type="button" onclick="editItem('${item.id}')" class="bg-gray-100 hover:bg-gray-200 text-gray-700 px-2 py-1 rounded text-xs">編集</button></td>
+                    <td class="py-1 px-1.5 border-r whitespace-nowrap">${shortDate}</td>
+                    <td class="py-1 px-1.5 border-r whitespace-nowrap font-medium">${item.title}</td>
+                    <td class="py-1 px-1.5 border-r text-right whitespace-nowrap">¥${item.amount.toLocaleString()}</td>
+                    <td class="py-1 px-1.5 border-r text-center whitespace-nowrap">${ratioText}</td>
+                    <td class="py-1 px-1.5 border-r text-right whitespace-nowrap font-semibold">¥${Math.round(requestAmount).toLocaleString()}</td>
+                    <td class="py-1 px-1.5 border-r text-gray-500 w-full text-[10px]">${item.memo || ''}</td>
+                    <td class="py-1 px-1.5 text-center whitespace-nowrap w-1"><button type="button" onclick="editItem('${item.id}')" class="bg-gray-100 hover:bg-gray-200 text-gray-700 px-1.5 py-0.5 rounded text-[10px]">編集</button></td>
                 `;
 
                 if (item.payer === 'ちーた') {
