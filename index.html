@@ -362,7 +362,7 @@
                 tr.innerHTML = `
                     <td class="py-1 px-1 whitespace-nowrap">${shortDate}</td>
                     <td class="py-1 px-1 whitespace-nowrap font-medium">${item.title}</td>
-                    <td class="py-1 px-1 text-right whitespace-nowrap">¥${item.amount.toLocaleString()}</td>
+                    <td class="py-1 px-1 text-right max-w-[50px] truncate whitespace-nowrap">¥${item.amount.toLocaleString()}</td>
                     <td class="py-1 px-1 text-center whitespace-nowrap">${ratioText}</td>
                     <td class="py-1 px-1 text-right whitespace-nowrap font-semibold">¥${Math.round(requestAmount).toLocaleString()}</td>
                     <td class="py-1 px-1 text-gray-500 text-[10px] max-w-[100px] truncate" title="${item.memo || ''}">${item.memo || ''}</td>
