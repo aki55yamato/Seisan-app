@@ -28,10 +28,10 @@
                     
                     <div>
                         <label class="block text-xs font-bold text-gray-600 mb-1">日付</label>
-                        <div class="w-full">
-                            <input type="date" id="date" class="w-full border rounded-lg p-2 text-sm bg-white">
-                        </div>
+                        <!-- classに box-border と inline-block、および高さ・パディングを他の入力欄と完全に統一 -->
+                        <input type="date" id="date" class="w-full box-border border rounded-lg px-3 py-2 text-sm bg-white" style="line-height: 1.5;">
                     </div>
+
                     <div>
                         <label class="block text-xs font-bold text-gray-600 mb-1">項目名</label>
                         <select id="title" class="w-full border rounded-lg p-2 text-sm bg-white">
