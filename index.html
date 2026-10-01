@@ -16,22 +16,23 @@
         </header>
 
         <!-- ローディング表示 -->
-        <div id="loading" class="text-center py-2 text-xs text-blue-600 font-bold" style="display: none;">更新中</div>
+        <div id="loading" class="text-center py-2 text-xs text-blue-600 font-bold" style="display: none;">通信中...</div>
 
         <!-- 左右スワイプを検知するコンテナ -->
         <div id="swipe-container">
             <!-- 【画面1】入力・編集画面 -->
             <div id="view-input" class="space-y-4">
-                <div class="bg-gray p-4 rounded-xl shadow-sm space-y-3 w-full max-w-md">
-                    <h2 id="form-title" class="text-xs font-bold text-blue-600 mb-2">新規データ登録中</h2>
+                <div class="bg-white p-4 rounded-xl shadow-sm space-y-3">
+                    <h2 id="form-title" class="text-xs font-bold text-blue-600 mb-2">新規データを登録</h2>
                     <input type="hidden" id="edit-id" value="">
                     
                     <div>
                         <label class="block text-xs font-bold text-gray-600 mb-1">日付</label>
-                        <!-- classに box-border と inline-block、および高さ・パディングを他の入力欄と完全に統一 -->
-                        <input type="date" id="date" class="w-full box-border border rounded-lg px-3 py-2 text-sm bg-white" style="line-height: 1.5;">
+                        <div class="relative">
+                            <input type="date" id="date" class="absolute inset-0 opacity-0 w-full h-full cursor-pointer z-10" onchange="document.getElementById('date-display').value = this.value;">
+                            <input type="text" id="date-display" readonly class="w-full box-border border rounded-lg px-3 py-2 text-sm bg-white pointer-events-none" placeholder="日付を選択">
+                        </div>
                     </div>
-
                     <div>
                         <label class="block text-xs font-bold text-gray-600 mb-1">項目名</label>
                         <select id="title" class="w-full border rounded-lg p-2 text-sm bg-white">
@@ -92,11 +93,11 @@
                         <table class="w-full text-left border-collapse" style="font-size: 11px;">
                             <thead>
                                 <tr class="bg-gray-50 border-b text-gray-600">
-                                    <th class="p-2 border-r">日付</th>
-                                    <th class="p-2 border-r">項目</th>
-                                    <th class="p-2 border-r text-right">金額</th>
-                                    <th class="p-2 border-r text-center">割合</th>
-                                    <th class="p-2 border-r text-right">請求額</th>
+                                    <th class="p-2 border-r whitespace-nowrap">日付</th>
+                                    <th class="p-2 border-r whitespace-nowrap">項目</th>
+                                    <th class="p-2 border-r text-right whitespace-nowrap">金額</th>
+                                    <th class="p-2 border-r text-center whitespace-nowrap">割合</th>
+                                    <th class="p-2 border-r text-right whitespace-nowrap">請求額</th>
                                     <th class="p-2 border-r w-full">メモ</th>
                                     <th class="p-2 text-center whitespace-nowrap w-1">操作</th>
                                 </tr>
@@ -109,7 +110,7 @@
                     </div>
                 </div>
 
-<!-- あきたの表 -->
+                <!-- あきたの表 -->
                 <div class="bg-white rounded-xl shadow-sm overflow-hidden border border-blue-100">
                     <div class="bg-blue-50 px-3 py-2 border-b border-blue-100">
                         <span class="font-bold text-xs text-blue-700">🔵 あきたの支払い・請求</span>
@@ -118,11 +119,11 @@
                         <table class="w-full text-left border-collapse" style="font-size: 11px;">
                             <thead>
                                 <tr class="bg-gray-50 border-b text-gray-600">
-                                    <th class="p-2 border-r">日付</th>
-                                    <th class="p-2 border-r">項目</th>
-                                    <th class="p-2 border-r text-right">金額</th>
-                                    <th class="p-2 border-r text-center">割合</th>
-                                    <th class="p-2 border-r text-right">請求額</th>
+                                    <th class="p-2 border-r whitespace-nowrap">日付</th>
+                                    <th class="p-2 border-r whitespace-nowrap">項目</th>
+                                    <th class="p-2 border-r text-right whitespace-nowrap">金額</th>
+                                    <th class="p-2 border-r text-center whitespace-nowrap">割合</th>
+                                    <th class="p-2 border-r text-right whitespace-nowrap">請求額</th>
                                     <th class="p-2 border-r w-full">メモ</th>
                                     <th class="p-2 text-center whitespace-nowrap w-1">操作</th>
                                 </tr>
@@ -151,10 +152,14 @@
     </nav>
 
     <script>
+        // ★ご自身のGASのウェブアプリURLを設定してください
         const GAS_URL = "https://script.google.com/macros/s/AKfycbyor_lx9N-JZJuXknKI1DLCboIOK39f8WlX6R8s47e4n2jkf9vzMbauCDqYAoRUig/exec"; 
         let items = [];
 
-        document.getElementById('date').valueAsDate = new Date();
+        // 初期設定（日付）
+        const todayStr = new Date().toISOString().split('T')[0];
+        document.getElementById('date').value = todayStr;
+        document.getElementById('date-display').value = todayStr;
         fetchData();
 
         function switchTab(tabName) {
@@ -191,17 +196,15 @@
         });
 
         function handleSwipe() {
-            const threshold = 50; // スワイプと判定する最小の距離（px）
+            const threshold = 50; 
             const viewInput = document.getElementById('view-input');
             
             if (touchEndX < touchStartX - threshold) {
-                // 左にスワイプ ＝ 一覧画面へ
                 if (viewInput.style.display !== 'none') {
                     switchTab('list');
                 }
             }
             if (touchEndX > touchStartX + threshold) {
-                // 右にスワイプ ＝ 入力画面へ
                 if (viewInput.style.display === 'none') {
                     switchTab('input');
                 }
@@ -256,6 +259,7 @@
             document.getElementById('edit-id').value = item.id;
             document.getElementById('form-title').innerText = 'データを修正';
             document.getElementById('date').value = item.date;
+            document.getElementById('date-display').value = item.date;
             document.getElementById('title').value = item.title;
             document.getElementById('payer').value = item.payer;
             document.getElementById('amount').value = item.amount;
@@ -302,6 +306,8 @@
                 document.getElementById('form-title').innerText = '新規データを登録';
                 document.getElementById('amount').value = '';
                 document.getElementById('memo').value = '';
+                document.getElementById('date').value = todayStr;
+                document.getElementById('date-display').value = todayStr;
                 document.getElementById('delete-btn-in-form').style.display = 'none';
                 switchTab('list');
             })
@@ -331,6 +337,8 @@
                     document.getElementById('form-title').innerText = '新規データを登録';
                     document.getElementById('amount').value = '';
                     document.getElementById('memo').value = '';
+                    document.getElementById('date').value = todayStr;
+                    document.getElementById('date-display').value = todayStr;
                     document.getElementById('delete-btn-in-form').style.display = 'none';
                     switchTab('list');
                 })
