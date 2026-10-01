@@ -141,18 +141,17 @@
 
     <!-- LINE風 下部固定タブバー -->
     <nav class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 shadow-lg flex justify-around py-2 z-50 max-w-xl mx-auto">
-        <button id="tab-input" onclick="switchTab('input')" class="flex-1 flex flex-col items-center justify-center py-1 text-blue-600 font-bold transition">
-            <svg class="w-6 h-6 mb-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
-            <span class="text-[10px]">入力・編集</span>
+        <button type="button" id="tab-input" onclick="switchTab('input')" class="flex-1 flex flex-col items-center justify-center py-1 text-blue-600 font-bold transition">
+            <svg class="w-6 h-6 mb-0.5 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+            <span class="text-[10px] pointer-events-none">入力・編集</span>
         </button>
-        <button id="tab-list" onclick="switchTab('list')" class="flex-1 flex flex-col items-center justify-center py-1 text-gray-400 font-bold transition">
-            <svg class="w-6 h-6 mb-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012-2m-6 9l2 2 4-4"></path></svg>
-            <span class="text-[10px]">一覧・精算</span>
+        <button type="button" id="tab-list" onclick="switchTab('list')" class="flex-1 flex flex-col items-center justify-center py-1 text-gray-400 font-bold transition">
+            <svg class="w-6 h-6 mb-0.5 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012-2m-6 9l2 2 4-4"></path></svg>
+            <span class="text-[10px] pointer-events-none">一覧・精算</span>
         </button>
     </nav>
 
     <script>
-        // 指定されたGASのURLを設定
         const GAS_URL = "https://script.google.com/macros/s/AKfycbyor_lx9N-JZJuXknKI1DLCboIOK39f8WlX6R8s47e4n2jkf9vzMbauCDqYAoRUig/exec"; 
         let items = [];
 
@@ -273,7 +272,7 @@
         function saveItem() {
             const editId = document.getElementById('edit-id').value;
             const date = document.getElementById('date').value;
-            const title = document.getElementById('title'].value;
+            const title = document.getElementById('title').value;
             const payer = document.getElementById('payer').value;
             const amount = parseFloat(document.getElementById('amount').value);
             const ratio = parseFloat(document.getElementById('ratio').value);
@@ -367,7 +366,6 @@
                 let ratioText = (item.ratio * 100) + '%';
                 if(item.ratio === 0.33) ratioText = '約33%';
 
-                // ① 日付から年号を削除して「MM/DD」（例: 10/03）の形式に変換
                 let shortDate = item.date;
                 if (item.date && item.date.includes('-')) {
                     const parts = item.date.split('-');
@@ -378,7 +376,6 @@
 
                 const tr = document.createElement('tr');
                 tr.className = "border-b hover:bg-gray-50";
-                // ②パディングを狭く(py-1 px-1.5)にし、③メモ欄の文字サイズを小さく(text-[10px])して折り返しを防止
                 tr.innerHTML = `
                     <td class="py-1 px-1.5 border-r whitespace-nowrap">${shortDate}</td>
                     <td class="py-1 px-1.5 border-r whitespace-nowrap font-medium">${item.title}</td>
