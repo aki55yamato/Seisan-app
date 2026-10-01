@@ -186,7 +186,7 @@
                                 const year = d.getUTCFullYear();
                                 const month = String(d.getUTCMonth() + 1).padStart(2, '0');
                                 const day = String(d.getUTCDate()).padStart(2, '0');
-                                formattedDate = `${year}-${month}-${day}`;
+                                formattedDate = `${month}/${day}`;
                             } else {
                                 formattedDate = String(item.date).split('T')[0];
                             }
