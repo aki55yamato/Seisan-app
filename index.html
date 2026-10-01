@@ -176,15 +176,32 @@
             fetch(GAS_URL)
                 .then(res => res.json())
                 .then(data => {
-                    items = data.map(item => ({
-                        id: String(item.id),
-                        date: item.date ? String(item.date).split('T')[0] : '',
-                        title: item.title,
-                        payer: item.payer,
-                        amount: Number(item.amount),
-                        ratio: Number(item.ratio),
-                        memo: item.memo || ''
-                    }));
+                    items = data.map(item => {
+                        // 日付のズレ（タイムゾーンによる前日表示）を防ぐ処理
+                        let formattedDate = '';
+                        if (item.date) {
+                            const d = new Date(item.date);
+                            if (!isNaN(d.getTime())) {
+                                // 日本時間（JST）のYYYY-MM-DD形式に強制変換する
+                                const year = d.getUTCFullYear();
+                                const month = String(d.getUTCMonth() + 1).padStart(2, '0');
+                                const day = String(d.getUTCDate()).padStart(2, '0');
+                                formattedDate = `${year}-${month}-${day}`;
+                            } else {
+                                formattedDate = String(item.date).split('T')[0];
+                            }
+                        }
+
+                        return {
+                            id: String(item.id),
+                            date: formattedDate,
+                            title: item.title,
+                            payer: item.payer,
+                            amount: Number(item.amount),
+                            ratio: Number(item.ratio),
+                            memo: item.memo !== undefined && item.memo !== null ? String(item.memo) : ''
+                        };
+                    });
                     loading.style.display = 'none';
                     renderList();
                 })
@@ -193,6 +210,7 @@
                     loading.style.display = 'none';
                 });
         }
+
 
         function editItem(id) {
             const item = items.find(i => String(i.id) === String(id));
