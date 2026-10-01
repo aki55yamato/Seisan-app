@@ -16,14 +16,14 @@
         </header>
 
         <!-- ローディング表示 -->
-        <div id="loading" class="text-center py-2 text-xs text-blue-600 font-bold" style="display: none;">通信中...</div>
+        <div id="loading" class="text-center py-2 text-xs text-gray-600 font-bold" style="display: none;">通信中</div>
 
         <!-- 左右スワイプを検知するコンテナ -->
         <div id="swipe-container">
             <!-- 【画面1】入力・編集画面 -->
             <div id="view-input" class="space-y-4">
                 <div class="bg-white p-4 rounded-xl shadow-sm space-y-3">
-                    <h2 id="form-title" class="text-xs font-bold text-blue-600 mb-2">新規データを登録</h2>
+                    <h2 id="form-title" class="text-xs font-bold text-blue-600 mb-2">新規データ登録画面</h2>
                     <input type="hidden" id="edit-id" value="">
                     
                     <div>
@@ -61,16 +61,15 @@
                             <option value="0.5" selected>50%</option>
                             <option value="1">100%</option>
                             <option value="0.33">約33%</option>
-                            <option value="0">0%</option>
                         </select>
                     </div>
                     <div>
-                        <label class="block text-xs font-bold text-gray-600 mb-1">メモ</label>
-                        <input type="text" id="memo" placeholder="例：11月分など" class="w-full border rounded-lg p-2 text-sm">
+                        <label class="block text-xs font-bold text-gray-600 mb-1">支払い先など</label>
+                        <input type="text" id="memo" placeholder="例：マルエツ中野若宮店" class="w-full border rounded-lg p-2 text-sm">
                     </div>
                     
                     <!-- 登録ボタン -->
-                    <button type="button" onclick="saveItem()" class="w-full bg-blue-600 text-white font-bold py-3 rounded-xl shadow hover:bg-blue-700 transition text-sm">この内容で登録</button>
+                    <button type="button" onclick="saveItem()" class="w-full bg-blue-600 text-white font-bold py-3 rounded-xl shadow hover:bg-blue-700 transition text-sm">この内容で更新</button>
                     
                     <!-- 削除ボタン -->
                     <button type="button" id="delete-btn-in-form" onclick="deleteCurrentEditItem()" class="w-full bg-white border border-red-500 text-red-500 font-bold py-3 rounded-xl hover:bg-red-50 transition text-sm" style="display: none;">削除</button>
@@ -87,7 +86,7 @@
                 <!-- ちーたの表 -->
                 <div class="bg-white rounded-xl shadow-sm overflow-hidden border border-red-100">
                     <div class="bg-red-50 px-3 py-2 border-b border-red-100">
-                        <span class="font-bold text-xs text-red-700">🔴 ちーたの支払い・請求</span>
+                        <span class="font-bold text-xs text-red-700">ちーたの支払い・請求</span>
                     </div>
                     <div class="overflow-x-auto">
                         <table class="w-full text-left border-collapse" style="font-size: 11px;">
@@ -98,8 +97,8 @@
                                     <th class="py-1 px-1.5 border-r text-right whitespace-nowrap">金額</th>
                                     <th class="py-1 px-1.5 border-r text-center whitespace-nowrap">割合</th>
                                     <th class="py-1 px-1.5 border-r text-right whitespace-nowrap">請求額</th>
-                                    <th class="py-1 px-1.5 border-r w-full">メモ</th>
-                                    <th class="py-1 px-1.5 text-center whitespace-nowrap w-1">操作</th>
+                                    <th class="py-1 px-1.5 border-r w-full">支払い先など</th>
+                                    <th class="py-1 px-1.5 text-center whitespace-nowrap w-1"></th>
                                 </tr>
                             </thead>
                             <tbody id="chita-tbody"></tbody>
@@ -113,7 +112,7 @@
                 <!-- あきたの表 -->
                 <div class="bg-white rounded-xl shadow-sm overflow-hidden border border-blue-100">
                     <div class="bg-blue-50 px-3 py-2 border-b border-blue-100">
-                        <span class="font-bold text-xs text-blue-700">🔵 あきたの支払い・請求</span>
+                        <span class="font-bold text-xs text-blue-700">あきたの支払い・請求</span>
                     </div>
                     <div class="overflow-x-auto">
                         <table class="w-full text-left border-collapse" style="font-size: 11px;">
@@ -124,8 +123,8 @@
                                     <th class="py-1 px-1.5 border-r text-right whitespace-nowrap">金額</th>
                                     <th class="py-1 px-1.5 border-r text-center whitespace-nowrap">割合</th>
                                     <th class="py-1 px-1.5 border-r text-right whitespace-nowrap">請求額</th>
-                                    <th class="py-1 px-1.5 border-r w-full">メモ</th>
-                                    <th class="py-1 px-1.5 text-center whitespace-nowrap w-1">操作</th>
+                                    <th class="py-1 px-1.5 border-r w-full">支払い先など</th>
+                                    <th class="py-1 px-1.5 text-center whitespace-nowrap w-1"></th>
                                 </tr>
                             </thead>
                             <tbody id="akita-tbody"></tbody>
@@ -194,22 +193,6 @@
             handleSwipe();
         });
 
-        function handleSwipe() {
-            const threshold = 50; 
-            const viewInput = document.getElementById('view-input');
-            
-            if (touchEndX < touchStartX - threshold) {
-                if (viewInput.style.display !== 'none') {
-                    switchTab('list');
-                }
-            }
-            if (touchEndX > touchStartX + threshold) {
-                if (viewInput.style.display === 'none') {
-                    switchTab('input');
-                }
-            }
-        }
-
         function fetchData() {
             if (GAS_URL.includes("YOUR_WEB_APP_URL")) return;
             const loading = document.getElementById('loading');
@@ -256,7 +239,7 @@
             if (!item) return;
 
             document.getElementById('edit-id').value = item.id;
-            document.getElementById('form-title').innerText = 'データを修正';
+            document.getElementById('form-title').innerText = 'データ修正画面';
             document.getElementById('date').value = item.date;
             document.getElementById('date-display').value = item.date;
             document.getElementById('title').value = item.title;
