@@ -337,7 +337,8 @@
                     <td class="p-2 border-r text-center whitespace-nowrap">${ratioText}</td>
                     <td class="p-2 border-r text-right whitespace-nowrap font-semibold">¥${Math.round(requestAmount).toLocaleString()}</td>
                     <td class="p-2 border-r text-gray-500">${item.memo || ''}</td>
-                    <td class="p-2 text-center"><button type="button" onclick="editItem('${item.id}')" class="bg-gray-100 hover:bg-gray-200 text-gray-700 px-2 py-1 rounded text-xs">✏️</button></td>
+                    <td class="p-2 text-center"><button type="button" onclick="editItem('${item.id}')" class="text-blue-600 hover:underline px-2 py-1 text-xs font-bold">編集</button>
+
                 `;
 
                 if (item.payer === 'ちーた') {
